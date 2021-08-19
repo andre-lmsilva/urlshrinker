@@ -94,16 +94,44 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.2</version>
+                <configuration>
+                    <properties>
+                        <excludeTags>integration</excludeTags>
+                    </properties>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.22.2</version>
+                <configuration>
+                    <properties>
+                        <includeTags>integration</includeTags>
+                    </properties>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
             </plugin>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.5.3</version>
+                <configuration>
+                    <executable>true</executable>
+                    <classifier>exec</classifier>
+                </configuration>
             </plugin>
 
             <plugin>
@@ -113,6 +141,11 @@
                 <configuration>
                     <destFile>${basedir}/target/jacoco-it.exec</destFile>
                     <dataFile>${basedir}/target/jacoco-it.exec</dataFile>
+                    <excludes>
+                        <!-- Removing non-util code from test coverage analysis -->
+                        <exclude>com/neueda/assignment/urlshrinker/Application.class</exclude>
+                        <exclude>com/neueda/assignment/urlshrinker/configuration/*</exclude>
+                    </excludes>
                 </configuration>
                 <executions>
                     <execution>
