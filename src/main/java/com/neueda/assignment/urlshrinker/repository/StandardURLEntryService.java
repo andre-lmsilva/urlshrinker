@@ -5,6 +5,8 @@ import com.neueda.assignment.urlshrinker.model.entity.URLEntry;
 import com.neueda.assignment.urlshrinker.repository.exception.URLNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +19,7 @@ import java.util.Optional;
  * to {@link Base62} and its methods.
  */
 @Service
+@CacheConfig(cacheNames = {"urlLookUp"})
 public class StandardURLEntryService implements URLEntryService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StandardURLEntryService.class);
@@ -71,6 +74,7 @@ public class StandardURLEntryService implements URLEntryService {
      * {@inheritDoc}
      */
     @Override
+    @Cacheable(cacheNames = {"urlLookUp"})
     public String findUrlAddressByUrlAlias(String urlAlias) {
         LOGGER.info("Looking up for URL assigned to alias '{}'.", urlAlias);
         Long urlEntryId = Base62.decode(urlAlias);
