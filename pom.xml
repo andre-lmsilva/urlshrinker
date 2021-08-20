@@ -109,14 +109,6 @@
                         <includeTags>integration</includeTags>
                     </properties>
                 </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -129,9 +121,15 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.5.3</version>
                 <configuration>
-                    <executable>true</executable>
-                    <classifier>exec</classifier>
+                    <mainClass>com.neueda.assignment.urlshrinker.Application</mainClass>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
