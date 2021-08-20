@@ -7,3 +7,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+
+application:
+  baseUrl: ${APP_BASE_URL}

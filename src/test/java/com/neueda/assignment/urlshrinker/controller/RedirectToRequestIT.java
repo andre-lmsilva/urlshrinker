@@ -6,6 +6,7 @@ import com.neueda.assignment.urlshrinker.model.entity.URLEntry;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.Date;

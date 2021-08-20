@@ -1,5 +1,7 @@
 package com.neueda.assignment.urlshrinker.model.request;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,11 +16,13 @@ import javax.validation.constraints.Size;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ApiModel(description = "Request object to shorten an URL address.")
 public class ShortenURLRequest {
 
     @NotBlank
     @Size(max = 2000, message = "must have up to {max} characters")
     @URL
+    @ApiModelProperty(notes = "URL address to be shortened.")
     private String urlAddress;
 
 }

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Standard implementation of {@link URLEntry}. This implementation creates the URL alias (shorter version of the URL)
@@ -20,7 +21,7 @@ import java.util.Optional;
  */
 @Service
 @CacheConfig(cacheNames = {"urlLookUp"})
-public class StandardURLEntryService implements URLEntryService {
+public class StandardURLEntryService<ConmpletableFuture> implements URLEntryService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StandardURLEntryService.class);
 

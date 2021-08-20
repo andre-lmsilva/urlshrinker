@@ -9,6 +9,8 @@ ENV DATABASE_URL=jdbc:hsqldb:mem:pro_urlshrinker;DB_CLOSE_DELAY=-1
 ENV DATABASE_USER=sa
 ENV DATABASE_PASSWORD=
 
+ENV APP_BASE_URL=http://localhost:8080
+
 ENV LOGGING_FILE_PATH=/var/log/url_shrinker
 ENV LOGGING_FILE_NAME=url_srinker.log
 

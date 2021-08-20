@@ -2,8 +2,11 @@ package com.neueda.assignment.urlshrinker.controller;
 
 import com.neueda.assignment.urlshrinker.model.request.ShortenURLRequest;
 import com.neueda.assignment.urlshrinker.repository.URLEntryService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +28,13 @@ public class URLEntryController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(URLEntryController.class);
     private final URLEntryService urlEntryService;
+    private final String baseUrl;
 
-    public URLEntryController(URLEntryService urlEntryService) {
+
+    public URLEntryController(URLEntryService urlEntryService,
+                              @Value("${application.baseUrl:http://localhost:8080}") String baseUrl) {
         this.urlEntryService = urlEntryService;
+        this.baseUrl = baseUrl;
     }
 
     /**
@@ -44,11 +51,18 @@ public class URLEntryController {
         consumes = { MediaType.APPLICATION_JSON_VALUE },
         produces = { MediaType.APPLICATION_JSON_VALUE }
     )
+    @ApiOperation(
+        value = "Shorten an URL for a smaller and convenient form.",
+        notes = "Submitted URLs will be stored in our database and have an unique shorter representation. Duplicated URLs wont result in any error."
+    )
     public ResponseEntity<Map<String, Object>> shortenURL(@RequestBody @Valid ShortenURLRequest shortenURLRequest) {
         LOGGER.info("Received request to shorten URL: {}", shortenURLRequest);
-        Map<String, Object> response = Map.of(
-            "urlAlias", this.urlEntryService.shortUrl(shortenURLRequest.getUrlAddress())
-        );
+
+        String shortenedURL = String.format("%s/%s", baseUrl,
+            this.urlEntryService.shortUrl(shortenURLRequest.getUrlAddress()));
+        LOGGER.debug("Responding with URL '{}'.", shortenedURL);
+
+        Map<String, Object> response = Map.of("urlAlias", shortenedURL);
         LOGGER.info("Short version '{}' generated for URL '{}'.", response.get("urlAlias"),
             shortenURLRequest.getUrlAddress());
 
@@ -64,11 +78,16 @@ public class URLEntryController {
      * @return {@link ResponseEntity} redirecting the user to the original URL address.
      */
     @GetMapping(path="/{urlAlias}")
-    public ResponseEntity<Void> redirectTo(@PathVariable String urlAlias) {
+    @ApiOperation(
+        value = "Redirects to the original URL based on its shorter version (alias).",
+        notes = "Non-existing alias will result in a 404 response."
+    )
+    public ResponseEntity<Void> redirectTo(
+            @ApiParam(value = "URL shorter version (a.k.a alias)") @PathVariable String urlAlias) {
         LOGGER.info("Request to redirect to URL received for alias '{}'.", urlAlias);
         String urlAddress = this.urlEntryService.findUrlAddressByUrlAlias(urlAlias);
-        LOGGER.info("Redirecting to URL '{}'.", urlAddress);
 
+        LOGGER.info("Redirecting to URL '{}'.", urlAddress);
         return ResponseEntity.status(HttpStatus.FOUND)
             .location(URI.create(urlAddress))
             .build();

@@ -3,3 +3,6 @@ spring:
     url: jdbc:hsqldb:mem:dev_urlshrinker;DB_CLOSE_DELAY=-1
     username: sa
     password:
+
+application:
+  baseUrl: http://localhost:8080

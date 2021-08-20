@@ -3,6 +3,7 @@ package com.neueda.assignment.urlshrinker.controller;
 import com.neueda.assignment.urlshrinker.fixture.ShortenURLRequestFixture;
 import com.neueda.assignment.urlshrinker.model.request.ShortenURLRequest;
 import com.neueda.assignment.urlshrinker.repository.URLEntryService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,8 +27,12 @@ class URLEntryControllerTest {
     @Mock
     private URLEntryService urlEntryService;
 
-    @InjectMocks
     private URLEntryController urlEntryController;
+
+    @BeforeEach
+    public void setUp() {
+        this.urlEntryController = new URLEntryController(this.urlEntryService, "http://localhost:8080");
+    }
 
     @Test
     @DisplayName("Given I submit a valid URL address to be shorten, then I should receive an URL alias in response.")
@@ -39,7 +44,7 @@ class URLEntryControllerTest {
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         Map<String, Object> responseBody = result.getBody();
-        assertThat(responseBody).containsEntry("urlAlias", FAKE_ALIAS);
+        assertThat(responseBody).containsEntry("urlAlias", "http://localhost:8080/"+FAKE_ALIAS);
     }
 
     @Test

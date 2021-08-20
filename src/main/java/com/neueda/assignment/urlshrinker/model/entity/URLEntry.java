@@ -39,6 +39,8 @@ public class URLEntry {
     @URL
     private String urlAddress;
 
+    private Long totalViews = 0L;
+
     @NotNull
     @Column(updatable = false)
     private Date createdAt;

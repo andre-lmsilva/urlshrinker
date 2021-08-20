@@ -16,7 +16,6 @@ import static org.hamcrest.text.MatchesPattern.matchesPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-
 @Tag("integration")
 @DisplayName("Given I submit a request to short an URL...")
 class ShortenURLRequestIT extends StandardIT {
@@ -47,7 +46,7 @@ class ShortenURLRequestIT extends StandardIT {
         );
 
         resultActions.andExpect(status().isCreated())
-            .andExpect(jsonPath("$.urlAlias").value(matchesPattern("^[0-9a-z]*$")));
+            .andExpect(jsonPath("$.urlAlias").value(matchesPattern("^http://localhost:8080/[0-9a-z]*$")));
     }
 
     @Test
@@ -62,8 +61,7 @@ class ShortenURLRequestIT extends StandardIT {
         );
 
         resultActions.andExpect(status().isCreated())
-            .andExpect(jsonPath("$.urlAlias").value(is(expectedAlias)));
-
+            .andExpect(jsonPath("$.urlAlias").value(is("http://localhost:8080/"+expectedAlias)));
     }
 
 }
