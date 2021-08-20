@@ -1,6 +1,7 @@
 package com.neueda.assignment.urlshrinker.controller;
 
 import com.neueda.assignment.urlshrinker.StandardIT;
+import com.neueda.assignment.urlshrinker.math.Base62;
 import com.neueda.assignment.urlshrinker.model.entity.URLEntry;
 import com.neueda.assignment.urlshrinker.model.request.ShortenURLRequest;
 import org.junit.jupiter.api.DisplayName;
@@ -46,21 +47,22 @@ class ShortenURLRequestIT extends StandardIT {
         );
 
         resultActions.andExpect(status().isCreated())
-            .andExpect(jsonPath("$.urlAlias").value(matchesPattern("^[0-9a-z]{6,10}$")));
+            .andExpect(jsonPath("$.urlAlias").value(matchesPattern("^[0-9a-z]*$")));
     }
 
     @Test
     @DisplayName("when submitting an already existing URL, receive the same urlAlias as response.")
     void whenSubmittingSameURLTwice_responseWithSameURLAlias() throws Exception {
-        URLEntry urlEntry = new URLEntry("https://www.google.com", "test01", new Date());
+        URLEntry urlEntry = new URLEntry("https://www.google.com", new Date());
         urlEntry = urlEntryRepository.save(urlEntry);
+        String expectedAlias = Base62.encode(urlEntry.getId());
 
         ResultActions resultActions = performPost(
             "/api/v1/url_entry", new ShortenURLRequest("https://www.google.com")
         );
 
         resultActions.andExpect(status().isCreated())
-            .andExpect(jsonPath("$.urlAlias").value(is(urlEntry.getUrlAlias())));
+            .andExpect(jsonPath("$.urlAlias").value(is(expectedAlias)));
 
     }
 

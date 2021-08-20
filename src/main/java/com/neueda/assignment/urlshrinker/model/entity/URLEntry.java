@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.URL;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -30,29 +31,20 @@ public class URLEntry {
     public static final int MAX_URL_ALIAS_LENGTH = 10;
 
     @Id
-    @GeneratedValue
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @NotBlank
     @Size(max = 2000, message = "must have up to {max} characters")
     @URL
     private String urlAddress;
 
-    @NotBlank
-    @Size(min = URLEntry.INITIAL_URL_ALIAS_LENGTH, max = URLEntry.MAX_URL_ALIAS_LENGTH)
-    @Pattern(
-        regexp = "^[a-z0-9]{"+ URLEntry.INITIAL_URL_ALIAS_LENGTH + "," + URLEntry.MAX_URL_ALIAS_LENGTH +"}$",
-        message = "must only have numbers and lower case letters"
-    )
-    private String urlAlias;
-
     @NotNull
     @Column(updatable = false)
     private Date createdAt;
 
-    public URLEntry(String urlAddress, String urlAlias, Date createdAt) {
+    public URLEntry(String urlAddress, Date createdAt) {
         this.urlAddress = urlAddress;
-        this.urlAlias = urlAlias;
         this.createdAt = createdAt;
     }
 

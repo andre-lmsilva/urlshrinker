@@ -18,21 +18,21 @@ class URLEntryTest extends BeanValidationTest<URLEntry> {
         @Test
         @DisplayName("not be null.")
         void urlAddressAsNull_failsToValidate() {
-            URLEntry entry = new URLEntry(null, null, null);
+            URLEntry entry = new URLEntry(null, null);
             verifyViolationForFieldWithMessage("urlAddress", "must not be blank", entry);
         }
 
         @Test
         @DisplayName("not be blank.")
         void urlAddressAsBlank_failsToValidate() {
-            URLEntry entry = new URLEntry("", null, null);
+            URLEntry entry = new URLEntry("", null);
             verifyViolationForFieldWithMessage("urlAddress", "must not be blank", entry);
         }
 
         @Test
         @DisplayName("not be invalid.")
         void urlAddressWithInvalidURL_failsToValidate() {
-            URLEntry entry = new URLEntry("invalid url", null, null);
+            URLEntry entry = new URLEntry("invalid url", null);
             verifyViolationForFieldWithMessage("urlAddress", "must be a valid URL", entry);
         }
 
@@ -41,7 +41,7 @@ class URLEntryTest extends BeanValidationTest<URLEntry> {
         void urlAddressWithMoreThant2000Characters_failsToValidate() {
             String longQueryParameter = new String(new char[2000]).replace("\0", "A");
             String url = String.format("https://www.google.com?query=%s", longQueryParameter);
-            URLEntry entry = new URLEntry(url, null, null);
+            URLEntry entry = new URLEntry(url, null);
             verifyViolationForFieldWithMessage("urlAddress", "must have up to 2000 characters",
                 entry);
         }
@@ -49,60 +49,8 @@ class URLEntryTest extends BeanValidationTest<URLEntry> {
         @Test
         @DisplayName("succeed to validate when valid.")
         void urlAddressWithValidURL_succeedsToValidate() {
-            URLEntry entry = new URLEntry("https://www.google.com?query=Java", "fkAlias", new Date());
+            URLEntry entry = new URLEntry("https://www.google.com?query=Java", new Date());
             verifyNoViolationForField("urlAddress", entry);
-        }
-
-    }
-
-    @Nested
-    @DisplayName("urlAlias should...")
-    class URLAliasTest {
-
-        @Test
-        @DisplayName("not be null.")
-        void urlAliasAsNull_failsToValidate() {
-            URLEntry entry = new URLEntry(null, null, null);
-            verifyViolationForFieldWithMessage("urlAlias", "must not be blank", entry);
-        }
-
-        @Test
-        @DisplayName("not be blank.")
-        void urlAliasAsBlank_failsToValidate() {
-            URLEntry entry = new URLEntry(null, "", null);
-            verifyViolationForFieldWithMessage("urlAlias", "must not be blank", entry);
-        }
-
-        @Test
-        @DisplayName("not be shorter than 6 characters.")
-        void urlAliasShorterThanSixCharacters_failsToValidate() {
-            URLEntry entry = new URLEntry(null, "abcde", null);
-            verifyViolationForFieldWithMessage("urlAlias", "size must be between 6 and 10",
-                entry);
-        }
-
-        @Test
-        @DisplayName("not be longer than 10 characters.")
-        void urlAliasLongerThanTenCharacters_failsToValidate() {
-            URLEntry entry = new URLEntry(null, "abcdefghijklm", null);
-            verifyViolationForFieldWithMessage("urlAlias", "size must be between 6 and 10",
-                entry);
-        }
-
-        @Test
-        @DisplayName("only have lowercase letters and numbers.")
-        void urlAliasWithInvalidFormat_failsToValidate() {
-            URLEntry entry = new URLEntry(null, "abc_def", null);
-            verifyViolationForFieldWithMessage("urlAlias",
-                "must only have numbers and lower case letters", entry);
-
-        }
-
-        @Test
-        @DisplayName("be considered valid with a value composed by numbers and lower case letter and length between 6 and 10 characters.")
-        void urlAliasWithValidAlias_succeedsToValidate() {
-            URLEntry entry = new URLEntry(null, "a1b2c3d4", null);
-            verifyNoViolationForField("urlAlias", entry);
         }
 
     }
@@ -114,14 +62,14 @@ class URLEntryTest extends BeanValidationTest<URLEntry> {
         @Test
         @DisplayName("not be null.")
         void createdAtAsNull_failsToValidate() {
-             URLEntry entry = new URLEntry(null, null, null);
+             URLEntry entry = new URLEntry(null, null);
              verifyViolationForFieldWithMessage("createdAt", "must not be null", entry);
         }
 
         @Test
         @DisplayName("be considered valid with any date.")
         void createAtWithValidNull_succeedsToValidate() {
-            URLEntry entry = new URLEntry(null, null, new Date());
+            URLEntry entry = new URLEntry(null, new Date());
             verifyNoViolationForField("createdAt", entry);
         }
 
